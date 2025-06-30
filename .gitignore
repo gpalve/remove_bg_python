@@ -86,7 +86,7 @@ Thumbs.db
 *.local
 
 # Ignore requirements.txt if generated
-requirements.txt
+# requirements.txt
 
 # Ignore templates if generated
-/templates/
+# /templates/

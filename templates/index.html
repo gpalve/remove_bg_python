@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>UCCC BG Remover</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      body {
+        min-height: 100vh;
+      }
+    </style>
+  </head>
+  <body class="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">
+    <div id="dropZone" class="drop-zone bg-white/80 rounded-xl shadow-xl p-10 flex flex-col items-center justify-center w-[90vw] max-w-xl h-[70vh] border-2 border-dashed border-gray-300 cursor-pointer transition hover:bg-white/90">
+      <h1 class="text-4xl font-bold mb-6 text-indigo-700">UCCC BG Remover V1.0.0</h1>
+      <form
+        id="uploadForm"
+        action="/"
+        method="post"
+        enctype="multipart/form-data"
+        class="flex flex-col items-center gap-4 w-full"
+      >
+        <input id="fileInput" type="file" name="file" class="file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100" />
+        <input id="submitBtn" type="submit" value="Remove Background" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg shadow transition cursor-pointer" />
+      </form>
+      <p class="mt-6 text-gray-500 text-sm">Drag & drop an image or click to select a file.</p>
+    </div>
+
+    <script>
+      let dropZone = document.getElementById("dropZone");
+      let fileInput = document.getElementById("fileInput");
+      let uploadForm = document.getElementById("uploadForm");
+      let submitBtn = document.getElementById("submitBtn");
+
+      // Only open file picker if click is not on the form or its children
+      dropZone.addEventListener("click", function (e) {
+        // If click is on the form or its children, do nothing
+        if (e.target.closest("form")) return;
+        fileInput.value = ""; // Reset file input so same file can be reselected
+        fileInput.click();
+      });
+
+      // Do NOT auto-submit on file selection; let user click "Remove Background"
+      fileInput.addEventListener("change", function () {
+        // No auto-submit here
+      });
+
+      // Drag & drop logic: auto-submit when file dropped
+      dropZone.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        this.classList.add("ring-4", "ring-indigo-300");
+      });
+
+      dropZone.addEventListener("dragleave", function (e) {
+        this.classList.remove("ring-4", "ring-indigo-300");
+      });
+
+      dropZone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        this.classList.remove("ring-4", "ring-indigo-300");
+        if (e.dataTransfer.files.length > 0) {
+          fileInput.files = e.dataTransfer.files;
+          uploadForm.submit();
+        }
+      });
+
+      // Prevent form submit if no file selected
+      uploadForm.addEventListener("submit", function (e) {
+        if (!fileInput.files || fileInput.files.length === 0) {
+          e.preventDefault();
+          alert("Please select a file first.");
+        }
+      });
+    </script>
+  </body>
+</html>
